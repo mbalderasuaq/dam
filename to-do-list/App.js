@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TextInput } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useState } from "react";
 
@@ -10,17 +10,27 @@ export default function App() {
     { id: 3, title: "Huevos", completed: false },
     { id: 4, title: "Carne", completed: false },
     { id: 5, title: "Pescado", completed: false },
-    { id: 6, title: "Frutas", completed: false },
-    { id: 7, title: "Verduras", completed: false },
-    { id: 8, title: "Pasta", completed: false },
-    { id: 9, title: "Arroz", completed: false },
-    { id: 10, title: "Salsa de tomate", completed: false },
-    { id: 11, title: "Aceite", completed: false },
-    { id: 12, title: "Sal", completed: false },
-    { id: 13, title: "Azúcar", completed: false },
-    { id: 14, title: "Café", completed: false },
-    { id: 15, title: "Té", completed: false },
   ]);
+
+  const handleCheck = (id) => {
+    setList(
+      list.map((item) => {
+        if (item.id === id) {
+          return { ...item, completed: !item.completed };
+        }
+        return item;
+      })
+    );
+  };
+
+  const addItem = (text) => {
+    if (text) {
+      setList([
+        ...list,
+        { id: list.length + 1, title: text, completed: false },
+      ]);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -33,40 +43,31 @@ export default function App() {
         </View>
         <View style={styles.list}>
           <ScrollView>
-            {/* <CheckBox title="Leche" />
-            <CheckBox title="Pan" />
-            <CheckBox title="Huevos" />
-            <CheckBox title="Carne" />
-            <CheckBox title="Pescado" />
-            <CheckBox title="Frutas" />
-            <CheckBox title="Verduras" />
-            <CheckBox title="Pasta" />
-            <CheckBox title="Arroz" />
-            <CheckBox title="Salsa de tomate" />
-            <CheckBox title="Aceite" />
-            <CheckBox title="Sal" />
-            <CheckBox title="Azúcar" />
-            <CheckBox title="Café" />
-            <CheckBox title="Té" /> */}
             {list.map((item) => (
               <CheckBox
                 key={item.id}
                 title={item.title}
                 onPress={() => {
-                  setList(
-                    list.map((listItem) => {
-                      if (listItem.id === item.id) {
-                        return { ...listItem, completed: !listItem.completed };
-                      }
-                      return listItem;
-                    })
-                  );
+                  handleCheck(item.id);
                 }}
                 checked={item.completed}
                 containerStyle={styles.checkbox}
+                checkedColor="#3949ab"
               />
             ))}
           </ScrollView>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Añadir elemento..."
+            onSubmitEditing={({
+              nativeEvent: { text },
+              currentTarget: { clear },
+            }) => {
+              addItem(text);
+              clear();
+            }}
+          />
         </View>
       </View>
       <StatusBar style="light" />
@@ -97,7 +98,6 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     height: "90%",
     width: "100%",
-    paddingHorizontal: 20,
     backgroundColor: "#f8f8ff",
   },
   titleContainer: {
@@ -109,15 +109,26 @@ const styles = StyleSheet.create({
   listTitle: {
     fontSize: 20,
     fontWeight: "bold",
+    paddingHorizontal: 20,
   },
   list: {
     width: "100%",
     marginBottom: "10%",
-    paddingBottom: "15%",
+    paddingBottom: "27%",
+    paddingHorizontal: 20,
   },
   checkbox: {
     backgroundColor: "white",
     marginLeft: 0,
     borderRadius: 10,
+    marginBottom: 3,
+  },
+  inputContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
 });
