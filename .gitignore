@@ -1,0 +1,8 @@
+# Git
+.git/
+
+# Bun.sh
+bun.lock
+
+# VS Code
+.vscode/
